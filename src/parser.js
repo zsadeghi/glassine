@@ -80,7 +80,7 @@ class Command {
     /**
      * @type {String}
      */
-    #value;
+    #argument;
 
     /**
      * @type {Number}
@@ -89,15 +89,15 @@ class Command {
 
     /**
      * @param {CommandType} type
-     * @param {String} value
+     * @param {String} argument
      */
-    constructor(type, value) {
+    constructor(type, argument) {
         this.#type = type;
-        this.#value = value.trim();
+        this.#argument = argument.trim();
         let hash = this.type.ord();
         hash = (hash << 5) - hash;
-        for (let i = 0; i < this.value.length; i++) {
-            let chr = this.value.charCodeAt(i);
+        for (let i = 0; i < this.argument.length; i++) {
+            let chr = this.argument.charCodeAt(i);
             hash = ((hash << 5) - hash) + chr;
             hash |= 0;
         }
@@ -114,8 +114,8 @@ class Command {
     /**
      * @return {String}
      */
-    get value() {
-        return this.#value;
+    get argument() {
+        return this.#argument;
     }
 
     /**
@@ -128,7 +128,7 @@ class Command {
     }
 
     toString() {
-        return this.#type.name() + " " + this.#value;
+        return this.#type.name() + " " + this.#argument;
     }
 
     get [Symbol.toStringTag]() {
