@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/zsadeghi/glassine/issues"
   },
-  "homepage": "https://github.com/zsadeghi/glassine#readme"
+  "homepage": "https://github.com/zsadeghi/glassine#readme",
+  "dependencies": {
+    "cli-progress": "^3.8.2",
+    "filesize": "^6.1.0",
+    "mkdirp": "^1.0.4",
+    "swagger-client": "^3.10.1",
+    "tmp-promise": "^2.0.2",
+    "wget-improved": "^3.2.0"
+  }
 }
