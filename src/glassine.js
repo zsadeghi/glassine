@@ -30,10 +30,14 @@ class Glassine {
                 fps: 1,
                 format: '{target} [{bar}] | {size} | ETA: {eta}s'
             }, cliProgress.Presets.shades_grey);
-            return Promise.allSettled([
-                this._download(multiBar, origin, imagePath, 'vmlinux'),
-                this._download(multiBar, origin, imagePath, 'rootfs.ext4'),
-            ]).then(() => {
+            let tasks = [];
+            if (!fs.existsSync(path.resolve(imagePath, 'vmlinux'))) {
+                tasks.push(this._download(multiBar, origin, imagePath, 'vmlinux'));
+            }
+            if (!fs.existsSync(path.resolve(imagePath, 'rootfs.ext4'))) {
+                tasks.push(this._download(multiBar, origin, imagePath, 'rootfs.ext4'));
+            }
+            return Promise.allSettled(tasks).then(() => {
                 multiBar.stop();
             });
         }
