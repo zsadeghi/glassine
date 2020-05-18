@@ -65,6 +65,12 @@ CommandType.WORKDIR = new CommandType("WORKDIR");
  */
 CommandType.ENTRYPOINT = new CommandType("ENTRYPOINT", "CMD");
 
+/**
+ * Indicates that the base image should be resized to the indicated value.
+ * @type {CommandType}
+ */
+CommandType.RESIZE = new CommandType("RESIZE");
+
 CommandType.close();
 
 /**
