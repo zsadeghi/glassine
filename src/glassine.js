@@ -6,6 +6,7 @@ const mkdirp = require('mkdirp');
 const wget = require('wget-improved');
 const cliProgress = require('cli-progress');
 const filesize = require('filesize');
+const mcopy = require('mcopy');
 
 const base = path.resolve('/', 'var', 'glassine');
 
@@ -42,6 +43,50 @@ class Glassine {
             });
         }
         return Promise.resolve();
+    }
+
+    async resize(source, target, size) {
+        const multiBar = new cliProgress.MultiBar({
+            clearOnComplete: true,
+            hideCursor: true,
+            noTTYOutput: true,
+            stopOnComplete: true,
+            barsize: 35,
+            etaBuffer: 150,
+            fps: 10,
+            format: '{target} [{bar}] | {size} | ETA: {eta}s'
+        }, cliProgress.Presets.shades_grey);
+        await this._copyFiles(multiBar, [{
+            src: source,
+            dest: target
+        }]);
+        let resize = multiBar.create(1, 0);
+        resize.update(0, {
+            target: 'resize',
+            size: size
+        });
+        ChildProcess.execSync('/usr/bin/truncate -s ' + size + ' ' + target);
+        resize.update(1);
+    }
+
+    _copyFiles(multiBar, operations) {
+        let bars = {};
+        operations.map(op => [op.src, multiBar.create(0, 0)]).forEach(def => {
+            bars[def[0]] = def[1];
+        });
+        return new Promise((resolve, reject) => {
+            mcopy(operations)
+                .on('error', reject)
+                .on('success', resolve)
+                .on('progress', (progress) => {
+                    bars[progress.file.src].setTotal(progress.fileBytesTotal);
+                    bars[progress.file.src].update(progress.fileBytesCopied, {
+                        target: path.basename(progress.file.src),
+                        size: filesize(progress.fileBytesTotal)
+                    });
+                });
+
+        });
     }
 
     _download(multiBar, origin, imagePath, file) {

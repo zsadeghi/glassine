@@ -19,6 +19,7 @@
   "dependencies": {
     "cli-progress": "^3.8.2",
     "filesize": "^6.1.0",
+    "mcopy": "0.0.1",
     "mkdirp": "^1.0.4",
     "swagger-client": "^3.10.1",
     "tmp-promise": "^2.0.2",
